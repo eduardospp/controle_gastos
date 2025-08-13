@@ -274,26 +274,28 @@
             <div class="tab-content active" id="receitas-tab">
                 <div class="row">
                     <div class="card">
-                        <h3>Adicionar Receita</h3>
-                        <div class="grid-2" style="margin-top:8px;">
-                            <div class="field">
-                                <label>Data</label>
-                                <input type="date" id="receita-data" />
-                            </div>
-                             <p id="formattedDate"></p>
-                            <div class="field">
-                                <label>Descrição</label>
-                                <input type="text" placeholder="Ex: Salário" id="receita-descricao" />
-                            </div>
-                            <div class="field">
-                                <label>Tipo</label>
-                                <select id="receita-tipo">
-                                    <option value="">Selecione...</option>
-                                    <option value="SALARIO">Salário</option>
-                                    <option value="FREELANCE">Freelance</option>
-                                    <option value="OUTROS">Outros</option>
-                                </select>
-                            </div>
+                 <h3>Adicionar Receita</h3>
+<div class="grid-2" style="margin-top:8px;">
+    <div class="field">
+        <label>Data</label>
+        <input type="date" id="receita-data" />
+    </div>
+    <p id="formattedDate"></p> <!-- A data formatada será exibida aqui -->
+    
+    <div class="field">
+        <label>Descrição</label>
+        <input type="text" placeholder="Ex: Salário" id="receita-descricao" />
+    </div>
+    <div class="field">
+        <label>Tipo</label>
+        <select id="receita-tipo">
+            <option value="">Selecione...</option>
+            <option value="SALARIO">Salário</option>
+            <option value="FREELANCE">Freelance</option>
+            <option value="OUTROS">Outros</option>
+        </select>
+    </div>
+</div>
                             <div class="field">
                                 <label>Valor</label>
                                 <input type="number" step="0.01" placeholder="0,00" id="receita-valor" />
