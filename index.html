@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Financeiro Completo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            letter-spacing: .5px;
+        }
+        
+        .main {
+            padding: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            background: #fff;
+            cursor: pointer;
+            transition: all .2s ease;
+            font-weight: 600;
+        }
+        .tab:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0,0,0,.06);
+        }
+        .tab.active {
+            background: #2c3e50;
+            color: #fff;
+            border-color: #2c3e50;
+        }
+        
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 900px) {
+            .row { grid-template-columns: 1fr; }
+        }
+        
+        .card {
+            background: #fff;
+            border: 2px solid #e1e8ed;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.05);
+        }
+        .card h3 {
+            margin-bottom: 12px;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 700px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+        
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .field label {
+            font-weight: 600;
+            font-size: .92rem;
+        }
+        .field input, .field select {
+            padding: 10px 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        .btn {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 0;
+            background: #2c3e50;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .btn:hover { filter: brightness(1.05); }
+        .btn-secondary {
+            background: #764ba2;
+        }
+        .btn-small {
+            padding: 8px 12px;
+            font-size: .9rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead th {
+            text-align: left;
+            font-size: .9rem;
+            color: #6b7280;
+            padding: 10px 8px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        tbody td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        @media (max-width: 900px) {
+            .kpis { grid-template-columns: 1fr 1fr; }
+        }
+        .kpi {
+            background: #fff;
+            border: 2px solid #e1e8ed;
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+        }
+        .kpi .label { color: #6b7280; font-size: .9rem; }
+        .kpi .value { font-size: 1.3rem; font-weight: 800; margin-top: 6px; }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 900px) {
+            .summary { grid-template-columns: 1fr; }
+        }
+        .summary-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 10px 12px;
+            background: #fff;
+        }
+        
+        .month-toolbar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .months {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .month-btn {
+            padding: 8px 10px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .month-btn.active {
+            background: #2c3e50;
+            color: #fff;
+            border-color: #2c3e50;
+        }
+        
+        .installments { display: none; }
+        .installments.show { display: block; }
+        
+        .delete-btn {
+            background: #ef4444;
+            color: #fff;
+            border: 0;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Controle de Gastos</h1>
+        </div>
+        <div class="main">
+            
+            <div class="card" style="margin-bottom: 16px;">
+                <div class="month-toolbar">
+                    <div class="months" id="month-selector"></div>
+                    <div style="display:flex; gap:8px; align-items:center; margin-left:auto;">
+                        <input id="new-month" type="month" />
+                        <button class="btn btn-secondary" onclick="addNewMonth()">+ Adicionar Mês</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('receitas')">Receitas</button>
+                <button class="tab" onclick="switchTab('gastos')">Gastos</button>
+                <button class="tab" onclick="switchTab('compromissos')">Compromissos</button>
+                <button class="tab" onclick="switchTab('relatorios')">Relatórios</button>
+            </div>
+            
+            <div class="row">
+                <div class="kpis">
+                    <div class="kpi">
+                        <div class="label">Receitas</div>
+                        <div class="value" id="total-receitas">R$ 0,00</div>
+                    </div>
+                    <div class="kpi">
+                        <div class="label">Gastos</div>
+                        <div class="value" id="total-gastos">R$ 0,00</div>
+                    </div>
+                    <div class="kpi">
+                        <div class="label">Compromissos</div>
+                        <div class="value" id="total-compromissos">R$ 0,00</div>
+                    </div>
+                    <div class="kpi">
+                        <div class="label">Saldo Livre</div>
+                        <div class="value" id="saldo-livre">R$ 0,00</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- RECEITAS -->
+            <div class="tab-content active" id="receitas-tab">
+                <div class="row">
+                    <div class="card">
+                        <h3>Adicionar Receita</h3>
+                        <div class="grid-2" style="margin-top:8px;">
+                            <div class="field">
+                                <label>Data</label>
+                                <input type="date" id="receita-data" />
+                            </div>
+                            <div class="field">
+                                <label>Descrição</label>
+                                <input type="text" placeholder="Ex: Salário" id="receita-descricao" />
+                            </div>
+                            <div class="field">
+                                <label>Tipo</label>
+                                <select id="receita-tipo">
+                                    <option value="">Selecione...</option>
+                                    <option value="SALARIO">Salário</option>
+                                    <option value="FREELANCE">Freelance</option>
+                                    <option value="OUTROS">Outros</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label>Valor</label>
+                                <input type="number" step="0.01" placeholder="0,00" id="receita-valor" />
+                            </div>
+                        </div>
+                        <div style="margin-top:12px;">
+                            <button class="btn" onclick="addIncome()">Adicionar</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Receitas do mês</h3>
+                        <div style="overflow:auto; margin-top:8px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Descrição</th>
+                                        <th>Tipo</th>
+                                        <th>Valor</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="income-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GASTOS -->
+            <div class="tab-content" id="gastos-tab">
+                <div class="row">
+                    <div class="card">
+                        <h3>Adicionar Gasto</h3>
+                        <div class="grid-2" style="margin-top:8px;">
+                            <div class="field">
+                                <label>Data</label>
+                                <input type="date" id="gasto-data" />
+                            </div>
+                            <div class="field">
+                                <label>Descrição</label>
+                                <input type="text" placeholder="Ex: Mercado" id="gasto-descricao" />
+                            </div>
+                            <div class="field">
+                                <label>Categoria</label>
+                                <select id="gasto-tipo">
+                                    <option value="">Selecione...</option>
+                                    <option value="MERCADO">Mercado</option>
+                                    <option value="TRANSPORTE">Transporte</option>
+                                    <option value="LAZER">Lazer</option>
+                                    <option value="SAUDE">Saúde</option>
+                                    <option value="CASA">Casa</option>
+                                    <option value="OUTROS">Outros</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label>Valor</label>
+                                <input type="number" step="0.01" placeholder="0,00" id="gasto-valor" />
+                            </div>
+                            <div class="field">
+                                <label>Forma de pagamento</label>
+                                <select id="gasto-pagamento" onchange="toggleInstallments()">
+                                    <option value="">Selecione...</option>
+                                    <option value="DEBITO">Débito</option>
+                                    <option value="PIX">PIX</option>
+                                    <option value="DINHEIRO">Dinheiro</option>
+                                    <option value="CRÉDITO">Crédito (fatura mês seguinte)</option>
+                                    <option value="CRÉDITO_PARCELADO">Crédito Parcelado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="installments" id="installment-fields" style="margin-top:8px;">
+                            <div class="grid-2">
+                                <div class="field">
+                                    <label>Nº de parcelas</label>
+                                    <input type="number" min="2" id="parcelas" />
+                                </div>
+                                <div class="field">
+                                    <label>Primeira parcela em</label>
+                                    <input type="month" id="primeiro-pagamento" />
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top:12px;">
+                            <button class="btn" onclick="addExpense()">Adicionar</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Gastos do mês</h3>
+                        <div style="overflow:auto; margin-top:8px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Descrição</th>
+                                        <th>Categoria</th>
+                                        <th>Valor</th>
+                                        <th>Pagamento</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expenses-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- COMPROMISSOS -->
+            <div class="tab-content" id="compromissos-tab">
+                <div class="row">
+                    <div class="card">
+                        <h3>Compromissos (gerados por crédito e parcelas)</h3>
+                        <div style="overflow:auto; margin-top:8px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Mês</th>
+                                        <th>Descrição</th>
+                                        <th>Origem</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="commitments-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Resumo</h3>
+                        <div class="summary" style="margin-top:8px;">
+                            <div>
+                                <h4 style="margin-bottom:8px;">Por categoria</h4>
+                                <div id="resumo-categoria"></div>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom:8px;">Por pagamento</h4>
+                                <div id="resumo-pagamento"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- RELATÓRIOS -->
+            <div class="tab-content" id="relatorios-tab">
+                <div class="row">
+                    <div class="card">
+                        <h3>Próximos compromissos</h3>
+                        <div id="proximos-compromissos" style="margin-top:8px;"></div>
+                    </div>
+                    <div class="card">
+                        <h3>Análise financeira</h3>
+                        <div id="analise-financeira" style="margin-top:8px;"></div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+<script type="module">
+/* ==============================
+   Backend: Supabase Integration
+   ==============================
+   Instruções rápidas:
+   1) Crie um projeto no Supabase.
+   2) Copie a URL do projeto e a chave pública (anon).
+   3) Substitua SUPABASE_URL e SUPABASE_ANON_KEY abaixo.
+   4) (Recomendado) Ative RLS e crie as políticas indicadas no SQL.
+   5) Publique este arquivo em um ambiente HTTPS (ou rode local com Live Server).
+*/
+
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+const SUPABASE_URL = 'https://irwmzkgsxwncdvgibctq.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlyd216a2dzeHduY2R2Z2liY3RxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwOTg1MjksImV4cCI6MjA3MDY3NDUyOX0.cyy-KToIlWNHh9UWY-GB11qwzAC1pZsXAEokq2QzGPg'
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+// Estado global
+let currentUser = null
+let currentMonth = new Date().toISOString().slice(0,7) // 'YYYY-MM'
+let cache = {
+  months: [],
+  incomes: [],
+  expenses: [],
+  commitments: []
+}
+
+// =====================
+// Utils & Formatação
+// =====================
+const qs = (sel) => document.querySelector(sel)
+const qsa = (sel) => Array.from(document.querySelectorAll(sel))
+
+function brMoney(v) {
+  const n = Number(v || 0)
+  return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
+
+function yyyymmOfDateStr(dateStr) {
+  // dateStr "YYYY-MM-DD" -> "YYYY-MM"
+  if (!dateStr) return currentMonth
+  return dateStr.slice(0, 7)
+}
+
+function nextMonth(yyyy_mm, offset = 1) {
+  const [y, m] = yyyy_mm.split('-').map(Number)
+  const d = new Date(y, m - 1 + offset, 1)
+  return d.toISOString().slice(0,7)
+}
+
+function labelOfMonth(yyyy_mm) {
+  const [y, m] = yyyy_mm.split('-').map(Number)
+  const d = new Date(y, m - 1, 1)
+  return d.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }).replace('.', '')
+}
+
+function setLoading(on) {
+  const btns = qsa('button')
+  btns.forEach(b => b.disabled = !!on)
+}
+
+// =====================
+// Auth (link mágico)
+// =====================
+async function initAuth() {
+  const { data: { session } } = await supabase.auth.getSession()
+  currentUser = session?.user || null
+  toggleAuthUI(!!currentUser)
+
+  supabase.auth.onAuthStateChange((_event, session) => {
+    currentUser = session?.user || null
+    toggleAuthUI(!!currentUser)
+    if (currentUser) boot()
+  })
+}
+
+function toggleAuthUI(isLogged) {
+  const main = qs('.container')
+  const authBox = getOrCreateAuthBox()
+  if (!isLogged) {
+    authBox.style.display = 'block'
+    main.style.display = 'none'
+  } else {
+    authBox.style.display = 'none'
+    main.style.display = 'block'
+  }
+}
+
+function getOrCreateAuthBox() {
+  let box = document.getElementById('auth-box')
+  if (box) return box
+  box = document.createElement('div')
+  box.id = 'auth-box'
+  box.style.maxWidth = '560px'
+  box.style.margin = '40px auto'
+  box.style.background = 'white'
+  box.style.borderRadius = '16px'
+  box.style.padding = '24px'
+  box.style.boxShadow = '0 10px 30px rgba(0,0,0,.1)'
+  box.innerHTML = `
+    <h2 style="margin-bottom:12px;">Entrar</h2>
+    <p style="margin-bottom:16px;color:#555">Use seu e-mail para receber um link mágico.</p>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input id="auth-email" type="email" placeholder="seu@email.com" style="flex:1;padding:12px;border:2px solid #e1e8ed;border-radius:8px"/>
+      <button id="auth-link" class="btn">Enviar link</button>
+    </div>
+    <p id="auth-msg" style="margin-top:12px;color:#2c3e50"></p>
+  `
+  document.body.prepend(box)
+  box.querySelector('#auth-link').addEventListener('click', async () => {
+    const email = box.querySelector('#auth-email').value.trim()
+    if (!email) { box.querySelector('#auth-msg').textContent = 'Informe um e-mail válido.'; return }
+    setLoading(true)
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: 'https://capable-trifle-15799a.netlify.app/' }
+    })
+    setLoading(false)
+    box.querySelector('#auth-msg').textContent = error ? ('Erro: ' + error.message) : 'Pronto! Verifique seu e-mail.'
+  })
+  return box
+}
+
+async function signOut() {
+  await supabase.auth.signOut()
+}
+
+// =====================
+// DB helpers
+// =====================
+async function ensureMonthExists(m) {
+  const { data, error } = await supabase
+    .from('months')
+    .select('month')
+    .eq('user_id', currentUser.id)
+    .eq('month', m)
+    .maybeSingle()
+  if (error && error.code !== 'PGRST116') console.error(error)
+  if (!data) {
+    await supabase.from('months').insert({ user_id: currentUser.id, month: m })
+  }
+}
+
+async function loadMonths() {
+  const { data, error } = await supabase
+    .from('months')
+    .select('month')
+    .eq('user_id', currentUser.id)
+    .order('month', { ascending: true })
+  if (error) throw error
+  cache.months = data.map(r => r.month)
+}
+
+async function loadMonthData(m) {
+  const [inc, exp, com] = await Promise.all([
+    supabase.from('incomes').select('*').eq('user_id', currentUser.id).eq('month', m).order('date', { ascending: true }),
+    supabase.from('expenses').select('*').eq('user_id', currentUser.id).eq('month', m).order('date', { ascending: true }),
+    supabase.from('commitments').select('*').eq('user_id', currentUser.id).eq('month', m).order('created_at', { ascending: true }),
+  ])
+  if (inc.error) throw inc.error
+  if (exp.error) throw exp.error
+  if (com.error) throw com.error
+  cache.incomes = inc.data
+  cache.expenses = exp.data
+  cache.commitments = com.data
+}
+
+async function boot() {
+  await ensureMonthExists(currentMonth)
+  await loadMonths()
+  renderMonthButtons()
+  await loadMonthData(currentMonth)
+  renderAll()
+}
+
+// =====================
+// Renderização
+// =====================
+function renderMonthButtons() {
+  const box = document.getElementById('month-selector')
+  box.innerHTML = ''
+  cache.months.forEach(m => {
+    const b = document.createElement('button')
+    b.className = 'month-btn' + (m === currentMonth ? ' active' : '')
+    b.textContent = labelOfMonth(m)
+    b.addEventListener('click', async () => {
+      currentMonth = m
+      qsa('.month-btn').forEach(x => x.classList.remove('active'))
+      b.classList.add('active')
+      await loadMonthData(currentMonth)
+      renderAll()
+    })
+    box.appendChild(b)
+  })
+}
+
+function renderAll() {
+  renderIncomeTable()
+  renderExpenseTable()
+  renderCommitmentsTable()
+  updateStats()
+  renderSummaries()
+}
+
+function updateStats() {
+  const totalReceitas = cache.incomes.reduce((s, r) => s + Number(r.amount), 0)
+  const totalGastos = cache.expenses.reduce((s, r) => s + Number(r.amount), 0)
+  const totalCompromissos = cache.commitments
+    .filter(c => (c.status || '').toUpperCase() !== 'PAGO')
+    .reduce((s, r) => s + Number(r.amount), 0)
+
+  document.getElementById('total-receitas').textContent = brMoney(totalReceitas)
+  document.getElementById('total-gastos').textContent = brMoney(totalGastos)
+  document.getElementById('total-compromissos').textContent = brMoney(totalCompromissos)
+  document.getElementById('saldo-livre').textContent = brMoney(totalReceitas - totalGastos - totalCompromissos)
+}
+
+function renderIncomeTable() {
+  const tbody = document.getElementById('income-tbody')
+  tbody.innerHTML = ''
+  cache.incomes.forEach(row => {
+    const tr = document.createElement('tr')
+    tr.innerHTML = `
+      <td>${row.date ?? ''}</td>
+      <td>${escapeHtml(row.description ?? '')}</td>
+      <td>${escapeHtml(row.type ?? '')}</td>
+      <td>${brMoney(row.amount)}</td>
+      <td><button class="delete-btn" data-id="${row.id}" data-table="incomes">Excluir</button></td>
+    `
+    tbody.appendChild(tr)
+  })
+  tbody.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', onDeleteClick))
+}
+
+function renderExpenseTable() {
+  const tbody = document.getElementById('expenses-tbody')
+  tbody.innerHTML = ''
+  cache.expenses.forEach(row => {
+    const tr = document.createElement('tr')
+    tr.innerHTML = `
+      <td>${row.date ?? ''}</td>
+      <td>${escapeHtml(row.description ?? '')}</td>
+      <td>${escapeHtml(row.category ?? '')}</td>
+      <td>${brMoney(row.amount)}</td>
+      <td>${escapeHtml(row.payment_method ?? '')}</td>
+      <td><button class="delete-btn" data-id="${row.id}" data-table="expenses">Excluir</button></td>
+    `
+    tbody.appendChild(tr)
+  })
+  tbody.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', onDeleteClick))
+}
+
+function renderCommitmentsTable() {
+  const tbody = document.getElementById('commitments-tbody')
+  tbody.innerHTML = ''
+  cache.commitments.forEach(row => {
+    const tr = document.createElement('tr')
+    tr.innerHTML = `
+      <td>${escapeHtml(row.month)}</td>
+      <td>${escapeHtml(row.description ?? '')}</td>
+      <td>${escapeHtml(row.origin ?? '')}</td>
+      <td>${brMoney(row.amount)}</td>
+      <td>${escapeHtml(row.status ?? '')}</td>
+      <td><button class="delete-btn" data-id="${row.id}" data-table="commitments">Excluir</button></td>
+    `
+    tbody.appendChild(tr)
+  })
+  tbody.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', onDeleteClick))
+}
+
+function renderSummaries() {
+  // Gastos por categoria
+  const byCat = {}
+  cache.expenses.forEach(e => {
+    const k = (e.category || 'OUTROS')
+    byCat[k] = (byCat[k] || 0) + Number(e.amount)
+  })
+  qs('#resumo-categoria').innerHTML = Object.entries(byCat)
+    .map(([k, v]) => `<div class="summary-item"><span>${escapeHtml(k)}</span><span>${brMoney(v)}</span></div>`)
+    .join('') || '<em>Sem dados</em>'
+
+  // Por forma de pagamento
+  const byPay = {}
+  cache.expenses.forEach(e => {
+    const k = (e.payment_method || 'N/D')
+    byPay[k] = (byPay[k] || 0) + Number(e.amount)
+  })
+  qs('#resumo-pagamento').innerHTML = Object.entries(byPay)
+    .map(([k, v]) => `<div class="summary-item"><span>${escapeHtml(k)}</span><span>${brMoney(v)}</span></div>`)
+    .join('') || '<em>Sem dados</em>'
+
+  // Próximos compromissos (até 6 meses à frente)
+  const future = cache.commitments
+    .filter(c => (c.status || '').toUpperCase() !== 'PAGO')
+    .sort((a,b) => a.month.localeCompare(b.month))
+  qs('#proximos-compromissos').innerHTML = future.slice(0, 12)
+    .map(c => `<div class="summary-item"><span>${escapeHtml(labelOfMonth(c.month))} — ${escapeHtml(c.description)}</span><span>${brMoney(c.amount)}</span></div>`)
+    .join('') || '<em>Sem dados</em>'
+
+  // Análise financeira simples
+  const receita = cache.incomes.reduce((s, r) => s + Number(r.amount), 0)
+  const gasto = cache.expenses.reduce((s, r) => s + Number(r.amount), 0)
+  const comp = future.reduce((s, r) => s + Number(r.amount), 0)
+  qs('#analise-financeira').innerHTML = `
+    <div class="summary-item"><span>Receitas</span><span>${brMoney(receita)}</span></div>
+    <div class="summary-item"><span>Gastos</span><span>${brMoney(gasto)}</span></div>
+    <div class="summary-item"><span>Compromissos pendentes</span><span>${brMoney(comp)}</span></div>
+    <div class="summary-item"><span>Saldo projetado</span><span>${brMoney(receita - gasto - comp)}</span></div>
+  `
+}
+
+// =====================
+// Eventos UI
+// =====================
+window.addNewMonth = async function addNewMonth() {
+  const v = qs('#new-month').value
+  if (!v) return alert('⚠️ Selecione um mês/ano válido')
+  setLoading(true)
+  await ensureMonthExists(v)
+  await loadMonths()
+  currentMonth = v
+  renderMonthButtons()
+  await loadMonthData(currentMonth)
+  renderAll()
+  setLoading(false)
+  qs('#new-month').value = ''
+  alert('✅ Novo mês adicionado!')
+}
+
+window.switchTab = function switchTab(id) {
+  const map = {
+    receitas: '#receitas-tab',
+    gastos: '#gastos-tab',
+    compromissos: '#compromissos-tab',
+    relatorios: '#relatorios-tab'
+  }
+  qsa('.tab').forEach(t => t.classList.remove('active'))
+  qsa('.tab-content').forEach(c => c.classList.remove('active'))
+  const tabIndex = { receitas:0, gastos:1, compromissos:2, relatorios:3 }[id] || 0
+  qsa('.tab')[tabIndex].classList.add('active')
+  qs(map[id]).classList.add('active')
+}
+
+window.toggleInstallments = function toggleInstallments() {
+  const sel = qs('#gasto-pagamento').value
+  const box = qs('#installment-fields')
+  if (sel === 'CRÉDITO_PARCELADO') box.classList.add('show')
+  else box.classList.remove('show')
+}
+
+// =====================
+// CRUD: Receitas
+// =====================
+window.addIncome = async function addIncome() {
+  const date = qs('#receita-data').value
+  const description = qs('#receita-descricao').value.trim()
+  const type = qs('#receita-tipo').value
+  const amount = Number(qs('#receita-valor').value)
+  if (!date || !description || !type || !amount) return alert('Preencha todos os campos de receita.')
+  setLoading(true)
+  const month = yyyymmOfDateStr(date)
+  await ensureMonthExists(month)
+  const { error } = await supabase.from('incomes').insert({
+    user_id: currentUser.id, month, date, description, type, amount
+  })
+  setLoading(false)
+  if (error) return alert('Erro ao salvar receita: ' + error.message)
+  if (month !== currentMonth) { currentMonth = month; await loadMonths(); renderMonthButtons() }
+  await loadMonthData(currentMonth); renderAll()
+  qs('#receita-data').value = ''
+  qs('#receita-descricao').value = ''
+  qs('#receita-tipo').value = ''
+  qs('#receita-valor').value = ''
+}
+
+// =====================
+// CRUD: Gastos (+parcelas/compromissos)
+// =====================
+window.addExpense = async function addExpense() {
+  const date = qs('#gasto-data').value
+  const description = qs('#gasto-descricao').value.trim()
+  const category = qs('#gasto-tipo').value
+  const amount = Number(qs('#gasto-valor').value)
+  const payment_method = qs('#gasto-pagamento').value
+  const parcelas = Number(qs('#parcelas').value || 0)
+  const firstMonth = qs('#primeiro-pagamento').value
+
+  if (!date || !description || !category || !amount || !payment_method) return alert('Preencha todos os campos do gasto.')
+  if (payment_method === 'CRÉDITO_PARCELADO' && (!parcelas || parcelas < 2 || !firstMonth)) {
+    return alert('Informe número de parcelas (>=2) e o mês da primeira parcela.')
+  }
+
+  setLoading(true)
+  const month = yyyymmOfDateStr(date)
+  await ensureMonthExists(month)
+
+  // 1) salva gasto
+  const insertExp = await supabase.from('expenses').insert({
+    user_id: currentUser.id, month, date, description, category, payment_method, amount
+  })
+  if (insertExp.error) { setLoading(false); return alert('Erro ao salvar gasto: ' + insertExp.error.message) }
+
+  // 2) gerar compromissos se necessário
+  const comRows = []
+  if (payment_method === 'CRÉDITO') {
+    const m = nextMonth(month, 1)
+    await ensureMonthExists(m)
+    comRows.push({
+      user_id: currentUser.id,
+      month: m,
+      description: 'Fatura: ' + description,
+      origin: 'Compra de ' + date,
+      amount,
+      status: 'PENDENTE',
+      kind: 'CARTÃO_CRÉDITO'
+    })
+  } else if (payment_method === 'CRÉDITO_PARCELADO') {
+    let per = Math.floor((amount / parcelas) * 100) / 100 // 2 casas decimais truncadas
+    let resto = Math.round((amount - per * parcelas) * 100) / 100 // ajustar último
+    for (let i = 0; i < parcelas; i++) {
+      const m = nextMonth(firstMonth, i)
+      await ensureMonthExists(m)
+      const value = i === parcelas - 1 ? per + resto : per
+      comRows.push({
+        user_id: currentUser.id,
+        month: m,
+        description: `Parcela ${i+1}/${parcelas}: ${description}`,
+        origin: 'Parcelado no crédito',
+        amount: value,
+        status: 'PENDENTE',
+        kind: 'PARCELA'
+      })
+    }
+  }
+  if (comRows.length) {
+    const ins = await supabase.from('commitments').insert(comRows)
+    if (ins.error) console.error('Erro ao criar compromissos:', ins.error)
+  }
+
+  setLoading(false)
+  if (month !== currentMonth) { currentMonth = month; await loadMonths(); renderMonthButtons() }
+  await loadMonthData(currentMonth); renderAll()
+  // limpa
+  qs('#gasto-data').value = ''
+  qs('#gasto-descricao').value = ''
+  qs('#gasto-tipo').value = ''
+  qs('#gasto-valor').value = ''
+  qs('#gasto-pagamento').value = ''
+  qs('#installment-fields').classList.remove('show')
+  qs('#parcelas').value = ''
+  qs('#primeiro-pagamento').value = ''
+}
+
+async function onDeleteClick(e) {
+  const id = e.currentTarget.getAttribute('data-id')
+  const table = e.currentTarget.getAttribute('data-table')
+  if (!confirm('Excluir este registro?')) return
+  const { error } = await supabase.from(table).delete().eq('id', id).eq('user_id', currentUser.id)
+  if (error) return alert('Erro ao excluir: ' + error.message)
+  await loadMonthData(currentMonth); renderAll()
+}
+
+// =====================
+// Acessibilidade/segurança básica
+// =====================
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"'`=\/]/g, function (c) {
+    return ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;',
+      '"': '&quot;', "'": '&#39;', '/': '&#x2F;',
+      '`': '&#x60;', '=': '&#x3D;'
+    })[c]
+  })
+}
+
+// =====================
+// Navegação inicial
+// =====================
+window.addEventListener('DOMContentLoaded', async () => {
+  // botão de sair (opcional): clique no logo para sair se quiser.
+  const header = document.querySelector('.header')
+  if (header) {
+    const signoutBtn = document.createElement('button')
+    signoutBtn.textContent = 'Sair'
+    signoutBtn.className = 'btn btn-small'
+    signoutBtn.style.marginLeft = '8px'
+    signoutBtn.addEventListener('click', signOut)
+    header.appendChild(signoutBtn)
+  }
+
+  await initAuth()
+  if (currentUser) boot()
+})
+</script>
+
+<!-- ==============================
+     ESQUEMA SQL PARA SUPABASE (cole no SQL editor)
+     ==============================
+
+-- Habilitar extensões (se necessário)
+create extension if not exists "uuid-ossp";
+create extension if not exists "pgcrypto";
+
+-- Tabela de meses (para os botões e organização)
+create table if not exists public.months (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  month text not null check (month ~ '^\d{4}-\d{2}$'),
+  created_at timestamptz not null default now(),
+  unique (user_id, month)
+);
+
+-- Receitas
+create table if not exists public.incomes (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  month text not null check (month ~ '^\d{4}-\d{2}$'),
+  date date not null,
+  description text not null,
+  type text not null,
+  amount numeric(14,2) not null check (amount >= 0),
+  created_at timestamptz not null default now()
+);
+
+-- Gastos
+create table if not exists public.expenses (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  month text not null check (month ~ '^\d{4}-\d{2}$'),
+  date date not null,
+  description text not null,
+  category text not null,
+  payment_method text not null,
+  amount numeric(14,2) not null check (amount >= 0),
+  created_at timestamptz not null default now()
+);
+
+-- Compromissos (faturas/parcelas)
+create table if not exists public.commitments (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  month text not null check (month ~ '^\d{4}-\d{2}$'),
+  description text not null,
+  origin text,
+  amount numeric(14,2) not null check (amount >= 0),
+  status text not null default 'PENDENTE',
+  kind text not null default 'PARCELA',
+  created_at timestamptz not null default now()
+);
+
+-- RLS
+alter table public.months enable row level security;
+alter table public.incomes enable row level security;
+alter table public.expenses enable row level security;
+alter table public.commitments enable row level security;
+
+-- Policies (somente o dono enxerga e altera)
+do $$ begin
+  if not exists (select 1 from pg_policies where polname = 'months_select_own') then
+    create policy "months_select_own" on public.months for select using (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'months_insert_own') then
+    create policy "months_insert_own" on public.months for insert with check (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'months_update_own') then
+    create policy "months_update_own" on public.months for update using (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'months_delete_own') then
+    create policy "months_delete_own" on public.months for delete using (auth.uid() = user_id);
+  end if;
+end $$;
+
+do $$ begin
+  if not exists (select 1 from pg_policies where polname = 'incomes_select_own') then
+    create policy "incomes_select_own" on public.incomes for select using (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'incomes_insert_own') then
+    create policy "incomes_insert_own" on public.incomes for insert with check (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'incomes_update_own') then
+    create policy "incomes_update_own" on public.incomes for update using (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'incomes_delete_own') then
+    create policy "incomes_delete_own" on public.incomes for delete using (auth.uid() = user_id);
+  end if;
+end $$;
+
+do $$ begin
+  if not exists (select 1 from pg_policies where polname = 'expenses_select_own') then
+    create policy "expenses_select_own" on public.expenses for select using (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'expenses_insert_own') then
+    create policy "expenses_insert_own" on public.expenses for insert with check (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'expenses_update_own') then
+    create policy "expenses_update_own" on public.expenses for update using (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'expenses_delete_own') then
+    create policy "expenses_delete_own" on public.expenses for delete using (auth.uid() = user_id);
+  end if;
+end $$;
+
+do $$ begin
+  if not exists (select 1 from pg_policies where polname = 'commitments_select_own') then
+    create policy "commitments_select_own" on public.commitments for select using (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'commitments_insert_own') then
+    create policy "commitments_insert_own" on public.commitments for insert with check (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'commitments_update_own') then
+    create policy "commitments_update_own" on public.commitments for update using (auth.uid() = user_id);
+  end if;
+  if not exists (select 1 from pg_policies where polname = 'commitments_delete_own') then
+    create policy "commitments_delete_own" on public.commitments for delete using (auth.uid() = user_id);
+  end if;
+end $$;
+
+-- Índices úteis
+create index if not exists idx_incomes_user_month on public.incomes(user_id, month);
+create index if not exists idx_expenses_user_month on public.expenses(user_id, month);
+create index if not exists idx_commitments_user_month on public.commitments(user_id, month);
+create index if not exists idx_months_user_month on public.months(user_id, month);
+-->
+
+</body>
+</html>
