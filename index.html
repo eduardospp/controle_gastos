@@ -280,6 +280,7 @@
                                 <label>Data</label>
                                 <input type="date" id="receita-data" />
                             </div>
+                             <p id="formattedDate"></p>
                             <div class="field">
                                 <label>Descrição</label>
                                 <input type="text" placeholder="Ex: Salário" id="receita-descricao" />
@@ -332,6 +333,7 @@
                                 <label>Data</label>
                                 <input type="date" id="gasto-data" />
                             </div>
+<p id="formattedDate"></p>
                             <div class="field">
                                 <label>Descrição</label>
                                 <input type="text" placeholder="Ex: Lazer" id="gasto-descricao" />
@@ -1078,6 +1080,21 @@ create index if not exists idx_expenses_user_month on public.expenses(user_id, m
 create index if not exists idx_commitments_user_month on public.commitments(user_id, month);
 create index if not exists idx_months_user_month on public.months(user_id, month);
 -->
+<script>
+    // Função para formatar a data para DD/MM
+    function formatDateToDDMM(date) {
+        const [year, month, day] = date.split('-');
+        return `${day}/${month}`;
+    }
 
+    // Captura a data inserida pelo usuário
+    const dateInput = document.getElementById('receita-data');
+    const formattedDateDisplay = document.getElementById('formattedDate'); // Onde a data formatada será exibida
+
+    dateInput.addEventListener('input', function() {
+        const formattedDate = formatDateToDDMM(dateInput.value);
+        formattedDateDisplay.textContent = "Data formatada: " + formattedDate; // Exibe a data formatada
+    });
+</script>
 </body>
 </html>
