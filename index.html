@@ -954,6 +954,13 @@ window.addEventListener('DOMContentLoaded', async () => {
 })
 </script>
 
+})
+</script>
+
+<!-- ==============================
+     ESQUEMA SQL PARA SUPABASE (cole no SQL editor)
+     ==============================
+
 -- Habilitar extensões (se necessário)
 create extension if not exists "uuid-ossp";
 create extension if not exists "pgcrypto";
@@ -1082,7 +1089,7 @@ create index if not exists idx_months_user_month on public.months(user_id, month
     // Função para formatar a data para DD/MM
     function formatDateToDDMM(date) {
         const [year, month, day] = date.split('-');
-        return `${day}/${month}`;
+        return ${day}/${month};
     }
 
     // Captura a data inserida pelo usuário
