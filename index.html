@@ -334,17 +334,16 @@
                             </div>
                             <div class="field">
                                 <label>Descrição</label>
-                                <input type="text" placeholder="Ex: Mercado" id="gasto-descricao" />
+                                <input type="text" placeholder="Ex: Lazer" id="gasto-descricao" />
                             </div>
                             <div class="field">
                                 <label>Categoria</label>
                                 <select id="gasto-tipo">
                                     <option value="">Selecione...</option>
-                                    <option value="MERCADO">Mercado</option>
+                                    <option value="GASTRONOMIA">Gastronomia</option>
                                     <option value="TRANSPORTE">Transporte</option>
                                     <option value="LAZER">Lazer</option>
                                     <option value="SAUDE">Saúde</option>
-                                    <option value="CASA">Casa</option>
                                     <option value="OUTROS">Outros</option>
                                 </select>
                             </div>
@@ -356,8 +355,7 @@
                                 <label>Forma de pagamento</label>
                                 <select id="gasto-pagamento" onchange="toggleInstallments()">
                                     <option value="">Selecione...</option>
-                                    <option value="DEBITO">Débito</option>
-                                    <option value="PIX">PIX</option>
+                                    <option value="DEBITO/PIX">Débito/PIX</option>
                                     <option value="DINHEIRO">Dinheiro</option>
                                     <option value="CRÉDITO">Crédito (fatura mês seguinte)</option>
                                     <option value="CRÉDITO_PARCELADO">Crédito Parcelado</option>
